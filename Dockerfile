@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-RUN pip3 install numpy pandas matplotlib tensorflow torch torchvision
+RUN pip3 install numpy pandas matplotlib tensorflow torch torchvision opencv-python
+
 
 # Clone Meta's Segment-Anything repository
 RUN git clone https://github.com/metaai/segment-anything.git
