@@ -15,6 +15,10 @@ HOW TO USE:
     - run script with 'python3 label.py'
     - image will pop up, click where you want the input label and then hit the
       'n' key to proceed to the next image
+
+NOTES:
+    - be sure to select central point that is not on laser pointers as
+      SAM will segment the lasers
 """
 
 # imports
