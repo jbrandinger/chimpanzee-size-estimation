@@ -10,7 +10,7 @@ def detect_laser_points(mask, source):
     hsv_frame = cv2.cvtColor(mask, cv2.COLOR_BGR2HSV) #convert from BGR to HSV 
 
     low_green = np.array([55, 110, 110])  #low_green values for green mask
-    high_green = np.array([65, 255, 255]) #high_green values for green mask
+    high_green = np.array([200, 255, 255]) #high_green values for green mask
     green_mask = cv2.inRange(hsv_frame, low_green, high_green) #performs basic threshold
     green = cv2.bitwise_and(mask, mask, mask=green_mask)#performs bitwise and operation
 
@@ -28,6 +28,6 @@ def detect_laser_points(mask, source):
             y, x, area = blob
             if area>1:   #checks for area of blob
                 points.append((int(x),int(y)))
-                result1 = cv2.circle(source, (int(x),int(y)),12,(0,0,255),-1) # draws circles on detected blob
+                result1 = cv2.circle(source.copy(), (int(x),int(y)),12,(0,0,255),-1) # draws circles on detected blob
 
     return result1, points
