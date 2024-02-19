@@ -3,32 +3,41 @@ import numpy as np
 
 
 def find_lasers(image):
-    # Step 2: Convert BGR to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    # Step 3: Define the range for green color and create a mask
-    lower_green = np.array([50, 100, 100]) # Example range, adjust based on your needs
-    upper_green = np.array([70, 255, 255]) # Example range, adjust based on your needs
-    mask = cv2.inRange(hsv, lower_green, upper_green)
+    lower_red1 = np.array([0, 100, 100])
+    upper_red1 = np.array([10, 255, 255])
+    lower_red2 = np.array([160, 100, 100])
+    upper_red2 = np.array([179, 255, 255])
 
-    # Optional: Apply morphological operations to reduce noise, if necessary
-    # kernel = np.ones((5, 5), np.uint8)
-    # mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
+    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+    mask = cv2.bitwise_or(mask1, mask2)
 
-    # Step 4: Find contours
+    # Debugging: Display the mask to check if the laser points are detected
+    cv2.imshow('Mask', mask)
+    cv2.waitKey(0)  # Wait for a key press to close the displayed window
+
     contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    print(f"Number of contours found: {len(contours)}")  # Debugging line
+
+    # Assuming laser points are among the largest red spots detected:
+    # Sort contours by area and keep the two largest
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:2]
 
     points = []
-    # Step 5: Extract coordinates
+    print("here1")
+    # Step 5: Extract coordinates of the two largest contours
     for cnt in contours:
+        print("here")
         # Calculate the centroid of the contour
         M = cv2.moments(cnt)
         if M["m00"] != 0:
             cx = int(M["m10"] / M["m00"])
             cy = int(M["m01"] / M["m00"])
-            print(f"Laser point at: ({cx}, {cy})")
+            print(f"Red laser point at: ({cx}, {cy})")
             # Optional: Draw a circle at the centroid in the original image
             cv2.circle(image, (cx, cy), 5, (255, 0, 0), -1)
             points.append((cx, cy))
-    
+
     return image, points

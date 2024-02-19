@@ -6,28 +6,38 @@ from pathlib import Path
 from skimage.feature import blob_log
 
 
-def detect_laser_points(mask, source):   
-    hsv_frame = cv2.cvtColor(mask, cv2.COLOR_BGR2HSV) #convert from BGR to HSV 
+def detect_laser_points(image, source):
+    # Convert from BGR to HSV
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    low_green = np.array([55, 110, 110])  #low_green values for green mask
-    high_green = np.array([200, 255, 255]) #high_green values for green mask
-    green_mask = cv2.inRange(hsv_frame, low_green, high_green) #performs basic threshold
-    green = cv2.bitwise_and(mask, mask, mask=green_mask)#performs bitwise and operation
+    # Define new HSV range for red laser points
+    lower_red1 = np.array([0, 70, 50])
+    upper_red1 = np.array([10, 255, 255])
+    lower_red2 = np.array([170, 70, 50])
+    upper_red2 = np.array([180, 255, 255])
 
-    g = green[:,:,1] #extracts the green channel
-    blur = cv2.GaussianBlur(g,(25,25),0) #adds blurring for smoothing
-    _,thresh = cv2.threshold(blur,210,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    
-    
-    thresh = cv2.dilate(thresh,(5,5),iterations=28) #adds dilation to enlarge dots a bit can be tuned with the arguments
+    # Create masks for red color
+    mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
+    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
+    red_mask = cv2.bitwise_or(mask1, mask2)
 
-    blobs = blob_log(thresh, max_sigma=50, threshold=0.15) # blob detection
-    if blobs.size != 0:  #checks if a blob was found
-        points = []
-        for blob in blobs[:2,:]:
-            y, x, area = blob
-            if area>1:   #checks for area of blob
-                points.append((int(x),int(y)))
-                result1 = cv2.circle(source.copy(), (int(x),int(y)),12,(0,0,255),-1) # draws circles on detected blob
+    # Apply Gaussian blur
+    blurred_mask = cv2.GaussianBlur(red_mask, (15, 15), 0)
 
-    return result1, points
+    # Apply threshold
+    _, thresh = cv2.threshold(blurred_mask, 127, 255, cv2.THRESH_BINARY)
+
+    # Dilate to make the laser points more visible
+    dilated_thresh = cv2.dilate(thresh, None, iterations=2)
+
+    # Detect blobs
+    blobs = blob_log(dilated_thresh, max_sigma=30, num_sigma=10, threshold=0.1)
+
+    # Process blobs
+    points = []
+    for blob in blobs:
+        y, x, r = blob
+        cv2.circle(source, (int(x), int(y)), int(r), (0, 255, 0), 2)
+        points.append((int(x), int(y)))
+
+    return source, points
