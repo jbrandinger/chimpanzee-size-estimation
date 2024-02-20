@@ -1,0 +1,129 @@
+{
+    "189.JPG": {
+        "input_point": [
+            1182,
+            835
+        ],
+        "mask": "189_mask.png",
+        "laser_points": [
+            [
+                1294,
+                811
+            ],
+            [
+                1348,
+                810
+            ]
+        ]
+    },
+    "203.JPG": {
+        "input_point": [
+            1112,
+            808
+        ],
+        "mask": "203_mask.png",
+        "laser_points": [
+            [
+                1248,
+                842
+            ],
+            [
+                1311,
+                843
+            ]
+        ]
+    },
+    "202.JPG": {
+        "input_point": [
+            1220,
+            815
+        ],
+        "mask": "202_mask.png",
+        "laser_points": [
+            [
+                1412,
+                754
+            ],
+            [
+                1342,
+                759
+            ]
+        ]
+    },
+    "196.JPG": {
+        "input_point": [
+            1575,
+            552
+        ],
+        "mask": "196_mask.png",
+        "laser_points": [
+            [
+                1334,
+                741
+            ],
+            [
+                1416,
+                745
+            ]
+        ]
+    },
+    "186.JPG": {
+        "input_point": [
+            1630,
+            847
+        ],
+        "mask": "186_mask.png",
+        "laser_points": [
+            [
+                1453,
+                855
+            ],
+            [
+                1454,
+                873
+            ]
+        ]
+    },
+    "193.JPG": {
+        "input_point": [
+            1657,
+            834
+        ],
+        "mask": "193_mask.png",
+        "laser_points": [
+            [
+                1398,
+                839
+            ],
+            [
+                1315,
+                840
+            ]
+        ]
+    },
+    "191.JPG": {
+        "input_point": [
+            1044,
+            812
+        ],
+        "mask": "191_mask.png",
+        "laser_points": []
+    },
+    "190.JPG": {
+        "input_point": [
+            1192,
+            950
+        ],
+        "mask": "190_mask.png",
+        "laser_points": [
+            [
+                1283,
+                849
+            ],
+            [
+                1283,
+                871
+            ]
+        ]
+    }
+}

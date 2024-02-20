@@ -27,10 +27,10 @@ import os
 import json
 
 # path to folder containing the images
-image_folder = 'sample_data'
+image_folder = 'red_lasers/sample_data'
 
 # json file to store results
-output_file = 'im_coords.json'
+output_file = 'red_lasers/im_data.json'
 
 # dictionary that will be converted to json
 image_data = {}
@@ -43,7 +43,7 @@ def click_event(event, x, y, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(f"Coordinates: (x={x}, y={y})")
         # add coordinates to dictionary
-        image_data[current_image_name] = {'x': x, 'y': y}
+        image_data[current_image_name] = {'input_point': (x, y)}
         print("Press 'n' to proceed to the next image.")
 
 # iterate through folder
