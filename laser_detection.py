@@ -1,3 +1,22 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Feb 20 2024
+
+@author: jbrandinger
+
+NAME: laser_detection.py
+
+PURPOSE: 
+    - detect red laser points on image
+
+HOW TO USE:
+    - provide 'detect_laser_points' with image containing red lasers
+
+NOTES:
+    - coordinates of laser points are returned as a list of tuples
+"""
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
