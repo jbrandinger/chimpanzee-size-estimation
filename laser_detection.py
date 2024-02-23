@@ -48,24 +48,28 @@ def detect_laser_points(img):
     blur = cv2.GaussianBlur(r, (25, 25), 0)
 
     # Apply thresholding
-    ret3, thresh = cv2.threshold(blur, 210, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    _, thresh = cv2.threshold(blur, 210, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Dilation to enlarge dots (tune parameters as needed)
-    thresh = cv2.dilate(thresh, (5, 5), iterations=28)
+    # thresh = cv2.dilate(thresh, (5, 5), iterations=28) # maybe change ?
+    thresh = cv2.dilate(thresh, None, iterations=2)
+
 
     # Blob detection
-    blobs = blob_log(thresh, max_sigma=50, threshold=0.15)
-    count =0
+    # blobs = blob_log(thresh, max_sigma=50, threshold=0.15)
+    blobs = blob_log(thresh, max_sigma=30, num_sigma=10, threshold=.1)
+    blobs = sorted(blobs, key=lambda b: b[1])
+
+    min_distance_px = 40 # minimum number of pixels apart
     points = []
-    if blobs.size != 0:  #checks if a blob was found
-    # ax[1].imshow(thresh, cmap='gray')
-        for blob in blobs[:2,:]:
-            y, x, area = blob
-            if area>1:   #checks for area of blob
-                count +=1
-                points.append((int(x),int(y)))
-    
-    else:
-        print("No lasers detected")
-    
-    return points
+    for blob in blobs:
+        y, x, r = blob
+        if r > 1:  # Check for area of blob
+            # Check if this blob is far enough from the last one
+            if not points or (x - points[-1][0])**2 + (y - points[-1][1])**2 >= min_distance_px**2:
+                points.append((int(x), int(y)))
+
+    if len(points) < 2:
+        print("Less than two lasers detected")
+
+    return points[:2]  # Return only the first two points
