@@ -107,7 +107,16 @@
             812
         ],
         "mask": "191_mask.png",
-        "laser_points": []
+        "laser_points": [
+            [
+                1333,
+                824
+            ],
+            [
+                1417,
+                824
+            ]
+        ]
     },
     "190.JPG": {
         "input_point": [

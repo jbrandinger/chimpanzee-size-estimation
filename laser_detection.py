@@ -21,9 +21,21 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.feature import blob_log
+from math import sqrt
 
 
-def detect_laser_points(img):
+def get_distance(p1, p2):
+    x1, y1 = p1[0], p1[1]
+    x2, y2 = p2[0], p2[1]
+    # Calculating Euclidean distance
+    return sqrt((x2 - x1)**2 + (y2 - y1)**2)
+    
+
+def detect_laser_points(source, mask):
+    # Apply the mask
+    img = np.zeros_like(source)
+    img[mask] = source[mask]
+
     # Assuming 'img' is your input image
     hsv_frame = cv2.cvtColor(img, cv2.COLOR_BGR2HSV) #convert from BGR to HSV
 
@@ -68,8 +80,5 @@ def detect_laser_points(img):
             # Check if this blob is far enough from the last one
             if not points or (x - points[-1][0])**2 + (y - points[-1][1])**2 >= min_distance_px**2:
                 points.append((int(x), int(y)))
-
-    if len(points) < 2:
-        print("Less than two lasers detected")
 
     return points[:2]  # Return only the first two points
