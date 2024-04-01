@@ -18,20 +18,20 @@ folder_path = '../../data/'
 images = []
 for root, dirs, files in os.walk(folder_path):
         for file in files:
-            images.append(clean_image(str(file)))
+            images.append(clean_image(str(file).lower()))
 
 # get names of images in spreadsheet
 spreadsheet_df = pd.read_csv('../../measured.csv')
 names_column = spreadsheet_df['PhotoID']
 names_column_cleaned = []
 for image in names_column:
-    names_column_cleaned.append(str(image))
+    names_column_cleaned.append(str(image).lower())
 # print(names_column_cleaned)
 
 collected_images = []
-for i in range(len(images)):
-    if images[i] in names_column_cleaned:
-        collected_images.append(images[i])
+for im in images:
+    if im in names_column_cleaned:
+        collected_images.append(im)
 
 print("Number of matched images: " + str(len(collected_images)))
 print("Ratio of matched images: " + str(len(collected_images)) + "/" + str(len(images)))
