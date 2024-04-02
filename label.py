@@ -26,8 +26,9 @@ import cv2
 import os
 import json
 
+
 # path to folder containing the images
-image_folder = 'red_lasers/sample_data'
+image_folder = 'red_lasers/new_sample_data'
 
 # json file to store results
 output_file = 'red_lasers/im_data.json'
@@ -48,6 +49,7 @@ def click_event(event, x, y, flags, params):
 
 # iterate through folder
 for image_name in os.listdir(image_folder):
+    print(image_name)
     if image_name.lower().endswith(('.png', '.jpg', '.jpeg')):
         image_path = os.path.join(image_folder, image_name)
         current_image_name = image_name
