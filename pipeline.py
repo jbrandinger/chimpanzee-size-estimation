@@ -169,13 +169,11 @@ for image_name, info in tqdm(image_data.items(), desc="ViTPose"):
       rump = keypoints[0][4]
       rump = [int(rump[1]), int(rump[0])]
       # Update the JSON data with shoulder and rump
-      image_data[image_name]['shoulder'] = shoulder
-      image_data[image_name]['rump'] = rump
+      image_data[image_name]['shoulder_rump'] = [shoulder, rump]
     else:
       print(f"vitpose failed for {image_path}")
       # TODO how do we want to handle this case in the json?
-      image_data[image_name]['shoulder'] = [0, 0]
-      image_data[image_name]['rump'] = [0, 0]
+      image_data[image_name]['shoulder_rump'] = None
 
 ##############################################################################
 #                      PART 5: GET FINAL DISTANCES                           #
@@ -204,4 +202,4 @@ for image_name, info in tqdm(image_data.items(), desc="Calculating Final Distanc
     id = image_name.split('.')[0]
     laser_width = conversion_dict[id]
     body_length = laser_width / ratio
-    print(f"Calculated length: {body_length}\tactual length: {true_dist_dcit[id]}")
+    print(f"Calculated length: {round(body_length, 3)}\tactual length: {round(true_dist_dcit[id], 3)}")
