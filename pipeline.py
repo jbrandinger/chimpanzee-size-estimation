@@ -40,9 +40,9 @@ from huggingface_hub import hf_hub_download
 #                          PART 1: LOAD IMAGE DATA                           #
 ##############################################################################
 # path to json file
-json_file = 'red_lasers/im_data.json'
+json_file = 'all_data.json'
 # folder containing images
-image_folder = 'red_lasers/new_sample_data'
+image_folder = '../red_laser_data'
 
 # load data
 with open(json_file, 'r') as file:
@@ -205,3 +205,12 @@ for image_name, info in tqdm(image_data.items(), desc="Calculating Final Distanc
     laser_width = conversion_dict[id]
     body_length = laser_width / ratio
     print(f"Calculated length: {round(body_length, 3)}\tactual length: {round(true_dist_dcit[id], 3)}")
+    
+    
+    
+    
+# Write the updated JSON data to a file
+with open(json_file, 'w') as file:
+    json.dump(image_data, file, indent=4)
+
+print(f"Updated data saved to {json_file}")

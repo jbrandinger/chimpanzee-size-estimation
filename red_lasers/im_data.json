@@ -14,7 +14,8 @@
                 1780,
                 1209
             ]
-        ]
+        ],
+        "cropped_image": "3-Feb-2016-294_crop.jpg"
     },
     "6-Oct-2015-186.JPG": {
         "input_point": [
@@ -31,7 +32,8 @@
                 1453,
                 857
             ]
-        ]
+        ],
+        "cropped_image": "6-Oct-2015-186_crop.jpg"
     },
     "3-Feb-2016-565.JPG": {
         "input_point": [
@@ -48,7 +50,8 @@
                 1888,
                 1284
             ]
-        ]
+        ],
+        "cropped_image": "3-Feb-2016-565_crop.jpg"
     },
     "4-Feb-2016-247.JPG": {
         "input_point": [
@@ -65,7 +68,8 @@
                 2014,
                 1174
             ]
-        ]
+        ],
+        "cropped_image": "4-Feb-2016-247_crop.jpg"
     },
     "3-Nov-2015-417.JPG": {
         "input_point": [
@@ -82,7 +86,8 @@
                 1439,
                 950
             ]
-        ]
+        ],
+        "cropped_image": "3-Nov-2015-417_crop.jpg"
     },
     "4-Dec-2015-4.JPG": {
         "input_point": [
@@ -99,7 +104,8 @@
                 1375,
                 632
             ]
-        ]
+        ],
+        "cropped_image": "4-Dec-2015-4_crop.jpg"
     },
     "30-Oct-2015-157.JPG": {
         "input_point": [
@@ -116,7 +122,8 @@
                 1234,
                 754
             ]
-        ]
+        ],
+        "cropped_image": "30-Oct-2015-157_crop.jpg"
     },
     "10-Feb-2016-134.JPG": {
         "input_point": [
@@ -133,6 +140,7 @@
                 0,
                 1799
             ]
-        ]
+        ],
+        "cropped_image": "10-Feb-2016-134_crop.jpg"
     }
 }
