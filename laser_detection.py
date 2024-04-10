@@ -22,13 +22,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from skimage.feature import blob_log
 from math import sqrt
-
-
-def get_distance(p1, p2):
-    x1, y1 = p1[0], p1[1]
-    x2, y2 = p2[0], p2[1]
-    # Calculating Euclidean distance
-    return sqrt((x2 - x1)**2 + (y2 - y1)**2)
     
 
 def detect_laser_points(source, mask):
@@ -57,19 +50,17 @@ def detect_laser_points(source, mask):
     r = red[:,:,2]
 
     # Apply Gaussian blur for smoothing
-    blur = cv2.GaussianBlur(r, (25, 25), 0)
+    blur = cv2.GaussianBlur(r, (15, 15), 0)
 
     # Apply thresholding
     _, thresh = cv2.threshold(blur, 210, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Dilation to enlarge dots (tune parameters as needed)
-    # thresh = cv2.dilate(thresh, (5, 5), iterations=28) # maybe change ?
-    thresh = cv2.dilate(thresh, None, iterations=2)
+    thresh = cv2.dilate(thresh, None, iterations=1)
 
 
     # Blob detection
-    # blobs = blob_log(thresh, max_sigma=50, threshold=0.15)
-    blobs = blob_log(thresh, max_sigma=30, num_sigma=10, threshold=.1)
+    blobs = blob_log(thresh, max_sigma=20, num_sigma=5, threshold=.05)
     blobs = sorted(blobs, key=lambda b: b[1])
 
     min_distance_px = 40 # minimum number of pixels apart
