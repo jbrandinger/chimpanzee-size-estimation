@@ -39,14 +39,26 @@ from huggingface_hub import hf_hub_download
 ##############################################################################
 #                          PART 1: LOAD IMAGE DATA                           #
 ##############################################################################
-# path to json file
-json_file = 'red_lasers/im_data.json'
-# folder containing images
-image_folder = 'red_lasers/new_sample_data'
+# ALL DATA
+# json_file = '../data/red_laser_data.json'
+# image_folder = '../data/red_laser_data'
+# mask_folder = '../data/red_laser_data_masks'
+
+# SAMPLE DATA
+json_file = 'sample_data/red_lasers/sample_data.json'
+image_folder = 'sample_data/red_lasers/sample_data'
+mask_folder = 'sample_data/red_lasers/sample_data_masks'
 
 # load data
 with open(json_file, 'r') as file:
     image_data = json.load(file)
+
+# self generated pixel distances
+truth_json = '../data/red_laser_truth.json' # all data but will contain distances for samples as well
+
+# load truth json
+with open(truth_json, 'r') as file:
+    truth_data = json.load(file)
 
 print(f"Running {len(image_data)} images through pipeline")
 ##############################################################################
@@ -55,8 +67,10 @@ print(f"Running {len(image_data)} images through pipeline")
 # select checkpoint and model type
 sam_checkpoint = "../sam_vit_h_4b8939.pth"
 model_type = "vit_h"
+device = "cuda"
 # define predictor
 sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
+sam.to(device=device)
 predictor = SamPredictor(sam)
 
 #function to generate mask
@@ -68,11 +82,6 @@ def generate_mask(im, input_point):
                                          multimask_output=True)
     # return best mask
     return masks[np.argmax(scores)]
-
-# folder to place masks
-mask_folder = 'red_lasers/new_sample_data_masks'
-# Ensure mask folder exists
-os.makedirs(mask_folder, exist_ok=True)
 
 # iterate through each entry in the JSON data
 for image_name, im_data in tqdm(image_data.items(), desc="SAM"):
@@ -183,6 +192,8 @@ measured_df = measured_df.dropna(subset=['PhotoID'])
 conversion_dict = dict(zip(measured_df['PhotoID'], measured_df['Laser Width']))
 true_dist_dcit = dict(zip(measured_df['PhotoID'], measured_df['BodyLength1']))
 
+# open truth data
+
 # iterate through each entry in json
 for image_name, info in tqdm(image_data.items(), desc="Calculating Final Distances"):
     # distances in pixels
@@ -194,12 +205,25 @@ for image_name, info in tqdm(image_data.items(), desc="Calculating Final Distanc
         continue
     
     # calculate ratio
-    laser_dist = round(math.dist(points[0], points[1]), 3)
-    sr_dist = round(math.dist(shoulder_rump[0], shoulder_rump[1]), 3)
+    laser_dist = math.dist(points[0], points[1])
+    sr_dist = math.dist(shoulder_rump[0], shoulder_rump[1])
     ratio = laser_dist / sr_dist
     
     # lookup laser width
-    id = image_name.split('.')[0]
-    laser_width = conversion_dict[id]
+    # TODO
+    true_laser_points = truth_data[image_name]['laser_points']
+    true_laser_dist = math.dist(true_laser_points[0], true_laser_points[1])
+    
+    photo_id = image_name.split('.')[0]
+    laser_width = conversion_dict[photo_id]
     body_length = laser_width / ratio
     print(f"Calculated length: {round(body_length, 3)}\tactual length: {round(true_dist_dcit[id], 3)}")
+    
+    
+    
+    
+# Write the updated JSON data to a file
+with open(json_file, 'w') as file:
+    json.dump(image_data, file, indent=4)
+
+print(f"Updated data saved to {json_file}")
