@@ -27,11 +27,13 @@ import os
 import json
 
 
-# path to folder containing the images
-image_folder = 'sample_data/red_lasers/sample_data'
+# SAMPLE DATA
+# image_folder = 'sample_data/red_lasers/sample_data'
+# output_file = 'sample_data/red_lasers/sample_data.json'
 
-# json file to store results
-output_file = 'sample_data/red_lasers/sample_data.json'
+# ALL DATA
+image_folder = '../data/red_laser_data'
+output_file = '../data/red_laser_data.json'
 
 # dictionary that will be converted to json
 image_data = {}
