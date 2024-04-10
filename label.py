@@ -28,10 +28,10 @@ import json
 
 
 # path to folder containing the images
-image_folder = 'red_lasers/new_sample_data'
+image_folder = 'sample_data/red_lasers/sample_data'
 
 # json file to store results
-output_file = 'red_lasers/im_data.json'
+output_file = 'sample_data/red_lasers/sample_data.json'
 
 # dictionary that will be converted to json
 image_data = {}
