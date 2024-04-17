@@ -24,7 +24,7 @@ from skimage.feature import blob_log
 from math import sqrt
     
 
-def detect_laser_points(source, mask):
+def detect_red_laser_points(source, mask):
     # Apply the mask
     img = np.zeros_like(source)
     img[mask] = source[mask]
@@ -64,6 +64,52 @@ def detect_laser_points(source, mask):
     blobs = sorted(blobs, key=lambda b: b[1])
 
     min_distance_px = 40 # minimum number of pixels apart
+    points = []
+    for blob in blobs:
+        y, x, r = blob
+        if r > 1:  # Check for area of blob
+            # Check if this blob is far enough from the last one
+            if not points or (x - points[-1][0])**2 + (y - points[-1][1])**2 >= min_distance_px**2:
+                points.append((int(x), int(y)))
+
+    return points[:2]  # Return only the first two points
+
+
+def detect_green_laser_points(source, mask):
+    # Apply the mask
+    img = np.zeros_like(source)
+    img[mask] = source[mask]
+
+    # Convert from BGR to HSV
+    hsv_frame = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # Define range for green
+    low_green = np.array([45, 120, 70])
+    high_green = np.array([75, 255, 255])
+
+    # Create mask for the green range
+    green_mask = cv2.inRange(hsv_frame, low_green, high_green)
+
+    # Apply mask to the image
+    green = cv2.bitwise_and(img, img, mask=green_mask)
+
+    # Extract green channel for processing (assuming green dots are the brightest in the green channel)
+    g = green[:,:,1]
+
+    # Apply Gaussian blur for smoothing
+    blur = cv2.GaussianBlur(g, (15, 15), 0)
+
+    # Apply thresholding
+    _, thresh = cv2.threshold(blur, 210, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Dilation to enlarge dots (tune parameters as needed)
+    thresh = cv2.dilate(thresh, None, iterations=1)
+
+    # Blob detection
+    blobs = blob_log(thresh, max_sigma=20, num_sigma=5, threshold=.05)
+    blobs = sorted(blobs, key=lambda b: b[1])
+
+    min_distance_px = 40  # minimum number of pixels apart
     points = []
     for blob in blobs:
         y, x, r = blob
