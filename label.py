@@ -28,12 +28,12 @@ import json
 
 
 # SAMPLE DATA
-# image_folder = 'sample_data/red_lasers/sample_data'
-# output_file = 'sample_data/red_lasers/sample_data.json'
+# image_folder = 'sample_data/green_lasers/sample_data'
+# output_file = 'sample_data/green_lasers/sample_data.json'
 
 # ALL DATA
-image_folder = '../data/red_laser_data'
-output_file = '../data/red_laser_data.json'
+image_folder = '../data/valid_QC'
+output_file = '../data/valid_QC.json'
 
 # dictionary that will be converted to json
 image_data = {}
