@@ -34,8 +34,8 @@ def detect_red_laser_points(source, mask):
 
     # Define two ranges for red (due to the circular nature of the hue scale in HSV)
     low_red1 = np.array([0, 120, 70])
-    high_red1 = np.array([10, 255, 255])
-    low_red2 = np.array([170, 120, 70])
+    high_red1 = np.array([15, 255, 255])
+    low_red2 = np.array([165, 120, 70])
     high_red2 = np.array([180, 255, 255])
 
     # Create masks for the red ranges
@@ -50,27 +50,35 @@ def detect_red_laser_points(source, mask):
     r = red[:,:,2]
 
     # Apply Gaussian blur for smoothing
-    blur = cv2.GaussianBlur(r, (15, 15), 0)
+    blur = cv2.GaussianBlur(r, (25, 25), 0)
 
     # Apply thresholding
     _, thresh = cv2.threshold(blur, 210, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     # Dilation to enlarge dots (tune parameters as needed)
-    thresh = cv2.dilate(thresh, None, iterations=1)
+    thresh = cv2.dilate(thresh, None, iterations=2)
 
 
     # Blob detection
-    blobs = blob_log(thresh, max_sigma=20, num_sigma=5, threshold=.05)
+    blobs = blob_log(thresh, max_sigma=20, num_sigma = 5, threshold=0.30)
     blobs = sorted(blobs, key=lambda b: b[1])
 
-    min_distance_px = 40 # minimum number of pixels apart
+    min_distance_px = 30  # minimum number of pixels apart
+    max_distance_px = 600  # maximum number of pixels apart
+
     points = []
     for blob in blobs:
         y, x, r = blob
         if r > 1:  # Check for area of blob
-            # Check if this blob is far enough from the last one
-            if not points or (x - points[-1][0])**2 + (y - points[-1][1])**2 >= min_distance_px**2:
+            if not points:
+                # If no points have been added, add the first valid blob as a point.
                 points.append((int(x), int(y)))
+            else:
+                # Calculate squared distance from the last added point
+                squared_distance = (x - points[-1][0])**2 + (y - points[-1][1])**2
+                # Check if the distance is within the allowed range
+                if min_distance_px**2 <= squared_distance <= max_distance_px**2:
+                    points.append((int(x), int(y)))
 
     return points[:2]  # Return only the first two points
 
