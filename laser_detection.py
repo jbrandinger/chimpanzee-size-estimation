@@ -21,6 +21,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from skimage.feature import blob_log
+from skimage.feature import blob_dog
 from math import sqrt
     
 
@@ -60,7 +61,7 @@ def detect_red_laser_points(source, mask):
 
 
     # Blob detection
-    blobs = blob_log(thresh, max_sigma=20, num_sigma = 5, threshold=0.30)
+    blobs = blob_dog(thresh, max_sigma=20, threshold=0.30)
     blobs = sorted(blobs, key=lambda b: b[1])
 
     min_distance_px = 30  # minimum number of pixels apart
